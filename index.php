@@ -28,11 +28,6 @@
                 <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2 link-dark">Sobre mí</a></li>
             </ul>
-
-            <div class="col-md-3 text-end">
-                <button type="button" class="btn btn-outline-primary me-2">Inicia Sesión</button>
-                <button type="button" class="btn btn-primary">Registrate</button>
-            </div>
         </header>
     </div>
     <!-- Menú Flexbox -->
