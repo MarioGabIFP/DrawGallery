@@ -4,9 +4,17 @@
         $pass = $_POST['pass'];
         
         if ($user == 'admin' && $pass == 'admin'){
-            header("location: ../login.php?logon=1");
+            header("location: ../login.php?logon=1&user=".$user);
         } else {
-            header("location: ../login.php?logon=0");
+            header("location: ../login.php?logon=0&user=".$user);
         }
+    } else if ($_GET['type'] == 'file') {
+        $user = $_GET['user'];
+        $file = $_FILES['file'];
+        $name = $file['name'];
+
+        move_uploaded_file($file['tmp_name'], '../media/'.$user.'/'.$name);
+
+        header("location: ../login.php?logon=1&user=".$user);
     }
 ?>

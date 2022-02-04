@@ -14,8 +14,22 @@
 </head>
 <body>
     <?php
-        if (isset($_GET['logon'])){
+        if (isset($_GET['logon']) && isset($_GET['user'])){
             if ((bool)$_GET['logon']){
+                $user = $_GET['user'];
+                $dir = './media/'.$user;
+                $rdir = opendir($dir);
+                
+                while($file=readdir($rdir)){
+                    if($file != "." && $file != ".."){
+                        $fileArr[] = $file;
+                    }
+                }
+
+                if (isset($fileArr)) {
+                    sort($fileArr, SORT_NATURAL | SORT_FLAG_CASE);
+                }
+
                 echo '
                     <!-- Cabecera bootstrap -->
                     <div class="container">
@@ -26,20 +40,15 @@
                 
                             <ul class="nav">
                                 <img src="https://themes.getbootstrap.com/wp-content/themes/bootstrap-marketplace/assets/images/elements/bootstrap-stack.png" class="rounded-circle border border-primary border-2" alt="nombrePerfil" width="40" height="40">
-                                <li><a href="#" class="nav-link px-2 link-secondary">cerrar sesion</a></li>
+                                <li><a href="./login.php" class="nav-link px-2 link-secondary">'.$user.', Cerrar sesión</a></li>
                             </ul>
                         </header>
                     </div>
                     <!-- Menú Flexbox -->
                     <nav></nav>
-                    <div class="container">
-                        <aside>
+                    <div class="container d-flex">
+                        <aside class="p-2">
                             <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-                                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                                    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-                                    <span class="fs-4">Sidebar</span>
-                                </a>
-                                <hr>
                                 <ul class="nav nav-pills flex-column mb-auto">
                                     <li class="nav-item">
                                         <a href="#" class="nav-link  link-dark">
@@ -62,10 +71,37 @@
                                 </ul>
                             </div>
                         </aside>
+                        <article class="p-2">
+                            <section>
+                                <div class="content">
+                                    <form action="./src/post.php?type=file&user='.$user.'" enctype="multipart/form-data" method="POST">
+                                        <div class="row">
+                                            <div class="col-auto mb-3">
+                                                <input name="file" class="form-control" type="file" id="formFile" accept="image/jpg,image/png,image/gif">
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="submit" class="btn btn-primary mb-3">Subir Imagen</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                ';
+                if (isset($fileArr)) {
+                    foreach($fileArr as $file){
+                        $fileName = pathinfo($file, PATHINFO_FILENAME);
+                        echo '                  <div class="col">
+                                                    <img src="'.$dir.'/'.$file.'" title="'.$fileName.'" alt="'.$fileName.'" class="card-img">
+                                                </div>
+                        ';
+                    }
+                } else {
+                    echo 'Aún no has subido ningun fichero';
+                }
+                echo '                  </row>
+                                    </form>
+                                </div>
+                            </section>
+                        </article>
                     </div>
-                    <article>
-                        <section></section>
-                    </article>
                 ';
             } else {
                 echo '
@@ -102,17 +138,29 @@
                                         </div>
                                         <div class="modal-body">
                                             <form class="container g-3" method="POST" action="./src/post.php?type=login">
-                                                <div class="row-auto">
-                                                    <label for="user" class="visually-hidden">Usuario</label>
-                                                    <input type="text" class="form-control border border-danger" id="user" name="user" placeholder="Usuario">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="user" class="visually-hidden">Usuario</label>
+                                                        <input type="text" class="form-control border border-danger" id="user" name="user" placeholder="Usuario">
+                                                    </div>
                                                 </div>
                                                 <br>
-                                                <div class="row-auto">
-                                                    <label for="pass" class="visually-hidden">Contraseña</label>
-                                                    <input type="password" class="form-control border border-danger" id="pass" name="pass" placeholder="Password">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="pass" class="visually-hidden">Contraseña</label>
+                                                        <input type="password" class="form-control border border-danger" id="pass" name="pass" placeholder="Password">
+                                                    </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col modal-footer">
+                                                        <div class="card border border-danger" style="width: 18rem;">
+                                                            <ul class="list-group list-group-flush">
+                                                                <li class="list-group-item">Usuario y/o contraseña incorrectos</li>
+                                                            </ul>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
@@ -159,17 +207,26 @@
                                         </div>
                                         <div class="modal-body">
                                             <form class="container g-3" method="POST" action="./src/post.php?type=login">
-                                                <div class="row-auto">
-                                                    <label for="user" class="visually-hidden">Usuario</label>
-                                                    <input type="text" class="form-control" id="user" name="user" placeholder="Usuario">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="user" class="visually-hidden">Usuario</label>
+                                                        <input type="text" class="form-control" id="user" name="user" placeholder="Usuario">
+                                                    </div>
                                                 </div>
                                                 <br>
-                                                <div class="row-auto">
-                                                    <label for="pass" class="visually-hidden">Contraseña</label>
-                                                    <input type="password" class="form-control" id="pass" name="pass" placeholder="Password">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="pass" class="visually-hidden">Contraseña</label>
+                                                        <input type="password" class="form-control" id="pass" name="pass" placeholder="Password">
+                                                    </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
