@@ -214,6 +214,20 @@
                                                     </div>
                                                 </div>
                                                 <br>';
+                } else {
+                    echo '
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input name="pass" class="form-control" type="text" placeholder="Contraseña" aria-label="default input example">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input name="npass" class="form-control" type="text" placeholder="Repite la contraseña" aria-label="default input example">
+                                                    </div>
+                                                </div>
+                                                <br>';
                 }
                 echo '
                                                 <div class="row">
@@ -230,6 +244,34 @@
                                                             <div class="card border border-danger" style="width: 18rem;">
                                                                 <ul class="list-group list-group-flush">
                                                                     <li class="list-group-item">Las contraseñas no coinciden</li>
+                                                                </ul>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary">Registrarse</button>
+                                                        </div>
+                                                    </div>
+                                                </div>';
+                } else if ($_GET['registror'] == -1) {
+                    echo '
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="modal-footer">
+                                                            <div class="card border border-success" style="width: 18rem;">
+                                                                <ul class="list-group list-group-flush">
+                                                                    <li class="list-group-item">Felicidades, ya puedes iniciar sesion</li>
+                                                                </ul>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary">Registrarse</button>
+                                                        </div>
+                                                    </div>
+                                                </div>';
+                } else if ($_GET['registror'] == 1) {
+                    echo '
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="modal-footer">
+                                                            <div class="card border border-danger" style="width: 18rem;">
+                                                                <ul class="list-group list-group-flush">
+                                                                    <li class="list-group-item">No se ha podido registrar; Fallo de servidor</li>
                                                                 </ul>
                                                             </div>
                                                             <button type="submit" class="btn btn-primary">Registrarse</button>
