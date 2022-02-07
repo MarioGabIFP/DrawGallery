@@ -4,9 +4,9 @@
         $pass = $_POST['pass'];
         
         if ($user == 'admin' && $pass == 'admin'){
-            header("location: ../login.php?logon=1&user=".$user);
+            header("location: ../miPanel.php?user=".$user);
         } else {
-            header("location: ../login.php?logon=0&user=".$user);
+            header("location: ../login.php?logon=0");
         }
     } else if ($_GET['type'] == 'file') {
         $user = $_GET['user'];
