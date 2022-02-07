@@ -16,27 +16,14 @@
     <body>
         <?php
             if (isset($_GET['logon'])){
-                if (!(bool)$_GET['logon']) {
+                if ($_GET['logon'] == 0) {
                     echo '
                         <!-- Cabecera bootstrap -->
                         <div class="container">
                             <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
                                 <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-                                    <img src="./res/img/svg/logo.svg" class="bi me-2" width="40" height="40">
+                                    <img src="./res/img/png/logo.png" class="bi me-2" width="40" height="40">
                                 </a>
-                    
-                                <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                                    <li><a href="#" class="nav-link px-2 link-secondary">Inicio</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">NFT\'s</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">Conectar Billetera</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">Servicios</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">Sobre mí</a></li>
-                                </ul>
-                    
-                                <div class="col-md-3 text-end">
-                                    <!-- cerrar sesión button -->
-                                </div>
                             </header>
                         </div>
                         <!-- Menú Flexbox -->
@@ -87,14 +74,47 @@
                                         </div>
                                         <div id="register" class="border-bottom border-start border-end visually-hidden">
                                             <div class="modal-body">
-                                                <form class="container g-3" method="POST" action="./src/post.php?type=login">
-                                                    <!-- campos del registro -->
+                                                <form class="container g-3" method="POST" action="./src/post.php?type=register">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="nom" class="form-control" type="text" placeholder="Nombre" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="apel" class="form-control" type="text" placeholder="Apellidos" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="user" class="form-control" type="text" placeholder="Usuario" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="pass" class="form-control" type="password" placeholder="Contraseña" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="npass" class="form-control" type="password" placeholder="Repite la contraseña" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="fNacim" class="form-control" type="Date" placeholder="Fecha de nacimiento" aria-label="default input example">
+                                                        </div>
+                                                    </div>
                                                     <br>
                                                     <div class="row">
                                                         <div class="col">
                                                             <div class="modal-footer">
-                                                                <!-- algun mensaje de error -->
-                                                                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                                                <button type="submit" class="btn btn-primary">Registrarse</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -105,30 +125,135 @@
                                 </div>
                             </section>
                         </article>
-                        <aside></aside>
                     ';
                 }
-            } else {
+            } else if (isset($_GET['registror'])) {
+                echo '
+                    <!-- Cabecera bootstrap -->
+                    <div class="container">
+                        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+                            <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+                                <img src="./res/img/png/logo.png" class="bi me-2" width="40" height="40">
+                            </a>
+                        </header>
+                    </div>
+                    <!-- Menú Flexbox -->
+                    <nav></nav>
+                    <article>
+                        <section>
+                            <div class="container">
+                                <div class="container w-42">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item">
+                                            <a id="menu_login" class="nav-link active" aria-current="page" href="#">Iniciar Sesión</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a id="menu_register" class="nav-link" href="#">Registrarse</a>
+                                        </li>
+                                    </ul>
+                                    <div id="login" class="border-bottom border-start border-end">
+                                        <div class="modal-body">
+                                            <form class="container g-3" method="POST" action="./src/post.php?type=login">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="user" class="visually-hidden">Usuario</label>
+                                                        <input type="text" class="form-control" id="user" name="user" placeholder="Usuario">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <label for="pass" class="visually-hidden">Contraseña</label>
+                                                        <input type="password" class="form-control" id="pass" name="pass" placeholder="Password">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div id="register" class="border-bottom border-start border-end visually-hidden">
+                                        <div class="modal-body">
+                                            <form class="container g-3" method="POST" action="./src/post.php?type=register">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input name="nom" class="form-control" type="text" placeholder="Nombre" aria-label="default input example">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input name="apel" class="form-control" type="text" placeholder="Apellidos" aria-label="default input example">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input name="user" class="form-control" type="text" placeholder="Usuario" aria-label="default input example">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                ';
+                if ($_GET['registror'] == 0) {
+                    echo '
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input name="pass" class="form-control border border-danger" type="text" placeholder="Contraseña" aria-label="default input example">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input name="npass" class="form-control border border-danger" type="text" placeholder="Repite la contraseña" aria-label="default input example">
+                                                    </div>
+                                                </div>
+                                                <br>';
+                }
+                echo '
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input name="fNacim" class="form-control" type="Date" placeholder="Fecha de nacimiento" aria-label="default input example">
+                                                    </div>
+                                                </div>
+                                                <br>';
+                if ($_GET['registror'] == 0) {
+                    echo '
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="modal-footer">
+                                                            <div class="card border border-danger" style="width: 18rem;">
+                                                                <ul class="list-group list-group-flush">
+                                                                    <li class="list-group-item">Las contraseñas no coinciden</li>
+                                                                </ul>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary">Registrarse</button>
+                                                        </div>
+                                                    </div>
+                                                </div>';
+                }
+                echo '
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </article>
+                    ';
+            }else {
                 echo '
                         <!-- Cabecera bootstrap -->
                         <div class="container">
                             <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
                                 <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-                                    <img src="./res/img/svg/logo.svg" class="bi me-2" width="40" height="40">
+                                    <img src="./res/img/png/logo.png" class="bi me-2" width="40" height="40">
                                 </a>
-                    
-                                <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                                    <li><a href="#" class="nav-link px-2 link-secondary">Inicio</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">NFT\'s</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">Conectar Billetera</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">Servicios</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">FAQs</a></li>
-                                    <li><a href="#" class="nav-link px-2 link-dark">Sobre mí</a></li>
-                                </ul>
-                    
-                                <div class="col-md-3 text-end">
-                                    <!-- cerrar sesión button -->
-                                </div>
                             </header>
                         </div>
                         <!-- Menú Flexbox -->
@@ -150,14 +275,12 @@
                                                 <form class="container g-3" method="POST" action="./src/post.php?type=login">
                                                     <div class="row">
                                                         <div class="col">
-                                                            <label for="user" class="visually-hidden">Usuario</label>
                                                             <input type="text" class="form-control" id="user" name="user" placeholder="Usuario">
                                                         </div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
                                                         <div class="col">
-                                                            <label for="pass" class="visually-hidden">Contraseña</label>
                                                             <input type="password" class="form-control" id="pass" name="pass" placeholder="Password">
                                                         </div>
                                                     </div>
@@ -174,13 +297,47 @@
                                         </div>
                                         <div id="register" class="border-bottom border-start border-end visually-hidden">
                                             <div class="modal-body">
-                                                <form class="container g-3" method="POST" action="./src/post.php?type=login">
-                                                    <!-- campos del registro -->
+                                                <form class="container g-3" method="POST" action="./src/post.php?type=register">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="nom" class="form-control" type="text" placeholder="Nombre" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="apel" class="form-control" type="text" placeholder="Apellidos" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="user" class="form-control" type="text" placeholder="Usuario" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="pass" class="form-control" type="password" placeholder="Contraseña" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="npass" class="form-control" type="password" placeholder="Repite la contraseña" aria-label="default input example">
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <input name="fNacim" class="form-control" type="Date" placeholder="Fecha de nacimiento" aria-label="default input example">
+                                                        </div>
+                                                    </div>
                                                     <br>
                                                     <div class="row">
                                                         <div class="col">
                                                             <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                                                <button type="submit" class="btn btn-primary">Registrarse</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -191,7 +348,6 @@
                                 </div>
                             </section>
                         </article>
-                        <aside></aside>
                     ';
             }
         ?>
@@ -202,7 +358,7 @@
                 <p class="col-md-4 mb-0 text-muted">© 2022 MaG Freelance</p>
 
                 <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                    <img src="./res/img/svg/logo.svg" class="bi me-2" width="40" height="40">
+                    <img src="./res/img/png/logo.png" class="bi me-2" width="40" height="40">
                 </a>
 
                 <ul class="nav col-md-4 justify-content-end">

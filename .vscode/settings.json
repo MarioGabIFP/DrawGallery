@@ -6,11 +6,11 @@
             },
             "previewLimit": 50,
             "server": "localhost",
-            "port": 3306,
+            "port": 3316,
             "driver": "MySQL",
             "name": "Local Instance MySQL801",
             "group": "localhost",
-            "database": "databaseWeb",
+            "database": "drawgallery",
             "username": "root",
             "connectionTimeout": 15000,
             "password": ""

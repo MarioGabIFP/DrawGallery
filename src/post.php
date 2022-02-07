@@ -16,5 +16,18 @@
         move_uploaded_file($file['tmp_name'], '../media/'.$user.'/'.$name);
 
         header("location: ../login.php?logon=1&user=".$user);
+    } else if ($_GET['type'] == 'register') {
+        $nom = $_POST['nom'];
+        $apel = $_POST['apel'];
+        $user = $_POST['user'];
+        $pass = $_POST['pass'];
+        $nPass = $_POST['npass'];
+        $fNacim = $_POST['fNacim'];
+
+        if ($pass != $nPass) {
+            header("location: ../login.php?registror=0");
+        } else {
+            
+        }
     }
 ?>
