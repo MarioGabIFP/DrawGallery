@@ -19,20 +19,26 @@
     if ($_GET['type'] == 'login'){
         $user = $_POST['user'];
         $pass = $_POST['pass'];
-        
-        if ($user == 'admin' && $pass == 'admin'){
-            header('location: ../miPanel.php?user='.$user);
-        } else {
-            header('location: ../login.php?logon=0');
-        }
+
+        $sql = 'SELECT userName, password FROM users WHERE userName = "'.$user.'" 
+                                                       AND password = "'.$pass.'";';
+
+        if($res = mysqli_query($conex, $sql)){
+            if ($reg = mysqli_fetch_row($res)){
+                header('location: ../miPanel.php?user='.$user);
+            } else {
+                header('location: ../login.php?logon=0');
+            }
+        } 
+
     } else if ($_GET['type'] == 'file') {
-        $user = $_GET['user'];
         $file = $_FILES['file'];
         $name = $file['name'];
+        $user = $_GET['user'];
 
-        move_uploaded_file($file['tmp_name'], '../media/'.$user.'/'.$name);
+        move_uploaded_file($file['tmp_name'], '../media/'.$name);
 
-        header("location: ../login.php?logon=1&user=".$user);
+        header("location: ../login.php?user=".$user);
     } else if ($_GET['type'] == 'register') {
         $nom = $_POST['nom'];
         $apel = $_POST['apel'];
@@ -45,11 +51,11 @@
             header("location: ../login.php?registror=0");
         } else {
             $sql = 'INSERT INTO users (name, surname, userName, password, birthday) 
-                    VALUES ("'.$_POST['nom'].'", 
-                            "'.$_POST['apel'].'", 
-                            "'.$_POST['user'].'", 
-                            "'.$_POST['pass'].'", 
-                            "'.$_POST['fNacim'].'"
+                    VALUES ("'.$nom.'", 
+                            "'.$apel.'", 
+                            "'.$user.'", 
+                            "'.$pass.'", 
+                            "'.$fNacim.'"
                             );';
 
             if(mysqli_query($conex, $sql)){
@@ -57,8 +63,59 @@
             } else {
                 header("location: ../login.php?registror=1");
             };
+        }
+    } else if ($_GET['type'] == 'post') {
+        $imgP = $_FILES['imgP'];
+        $imgS = $_FILES['imgS'];
+        $imgPName = $imgP['name'];
+        $imgSName = $imgS['name'];
+        $titPost = $_POST['title'];
+        $resumPost = $_POST['resum'];
+        $descrPost = $_POST['descr'];
+        $sitePost = $_POST['site'];
+        $user = $_GET['user'];
+        
+        $sql = 'INSERT INTO historias (title, resum, description, country) 
+                VALUES ("'.$titPost.'", 
+                        "'.$resumPost.'", 
+                        "'.$descrPost.'", 
+                        "'.$sitePost.'"
+                        );';
 
-            mysqli_close($conex);
+        if(mysqli_query($conex, $sql)){
+
+            $sql = 'SELECT idpost FROM historias WHERE title = "'.$titPost.'"';
+            
+            if($res = mysqli_query($conex, $sql)){
+                if ($reg = mysqli_fetch_row($res)){
+                    $idPost = $reg[0];
+                }
+            }
+            
+            $sql = 'INSERT INTO post (idusers, idPost) 
+                    VALUES ((SELECT idusers FROM users WHERE userName = "'.$user.'"),
+                            "'.$idPost.'"
+                           );';
+            
+            if(mysqli_query($conex, $sql)){
+                $dirimg = 'media/'.$user.'/'.$idPost;
+                $rutaimgP = $dirimg.'/1_'.$imgPName;
+                $rutaimgS = $dirimg.'/2_'.$imgSName;
+
+                $sql = 'UPDATE historias SET mainImg = "'.$rutaimgP.'",
+                                             otherImg = "'.$rutaimgS.'"
+                                         WHERE idpost = "'.$idPost.'"';
+
+                if(mysqli_query($conex, $sql)){
+                    mkdir('../'.$dirimg);
+                    move_uploaded_file($imgP['tmp_name'], '../'.$rutaimgP);
+                    move_uploaded_file($imgS['tmp_name'], '../'.$rutaimgS);
+
+                    header("refresh:15;location: ../miPanel.php?user=".$user);
+                }
+            }
         }
     }
+
+    mysqli_close($conex);
 ?>

@@ -25,11 +25,11 @@ DROP TABLE IF EXISTS `drawgallery`.`users` ;
 
 CREATE TABLE IF NOT EXISTS `drawgallery`.`users` (
   `idusers` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(200) NULL,
+  `name` VARCHAR(200) NOT NULL,
   `surname` VARCHAR(200) NULL,
-  `userName` VARCHAR(200) NULL,
+  `userName` VARCHAR(200) NOT NULL,
   `birthday` DATE NULL,
-  `password` VARCHAR(200) NULL,
+  `password` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`idusers`))
 ENGINE = InnoDB;
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `drawgallery`.`Historias` (
   `description` VARCHAR(2000) NOT NULL,
   `mainImg` VARCHAR(100) NOT NULL,
   `otherImg` VARCHAR(100) NULL,
-  `country` ENUM('España', 'Europa', 'Otros') NOT NULL,
+  `country` ENUM('España', 'Europa', 'Resto del mundo') NOT NULL,
   PRIMARY KEY (`idpost`))
 ENGINE = InnoDB;
 
