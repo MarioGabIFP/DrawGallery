@@ -1,0 +1,9 @@
+{
+    "data_base_conex" : {
+        "db" : "drawgallery",
+        "user" : "root",
+        "passw" : "",
+        "dir" : "localhost",
+        "port" : "3316"
+    }
+}
