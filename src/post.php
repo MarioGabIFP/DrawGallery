@@ -1,13 +1,21 @@
 <?php
+    /*
+     *  Obtencion de los datos de conexion  a la base de datos a partir del fichero de configuración (res/json/conf.json)
+     */
+    //Leemos los datos y los recojemos en un Objeto.
     $jsonStr = file_get_contents('../res/json/conf.json');
     $conexData = json_decode($jsonStr);
 
-    $db = $conexData->data_base_conex->db;
-    $user = $conexData->data_base_conex->user;
-    $passw = $conexData->data_base_conex->passw;
-    $dir = $conexData->data_base_conex->dir;
-    $port = $conexData->data_base_conex->port;
+    //recojemos los datos del objeto generado y los introducimos en sus correspondientes variables
+    $db = $conexData->data_base_conex->db;          //nombre de la base de datos
+    $user = $conexData->data_base_conex->user;      //usuario
+    $passw = $conexData->data_base_conex->passw;    //contraseña
+    $dir = $conexData->data_base_conex->dir;        //direccion (DNS o IP)
+    $port = $conexData->data_base_conex->port;      //puerto de conexion
 
+    /*
+     *  Conexión a la base de datos.
+     */
     $conex = mysqli_connect($dir.':'.$port,$user,$passw,$db) 
                     or die ("Unnable to conect to Data Base: ".$db."
                             \nURL: ".$dir.":".$port."
@@ -20,7 +28,11 @@
         echo "Unnable to conect; Error: ".mysqli_connect_error();
     };
 
-    if (isset($_GET['type'])) {
+    if (isset($_GET['type'])) {//si hemos recibido correctamente el tipo de petición.
+        
+        /*
+         *  En el caso de que la petición sea de inicio de sesión
+         */
         if ($_GET['type'] == 'login'){
             $user = $_POST['user'];
             $pass = $_POST['pass'];
@@ -35,7 +47,10 @@
                     header('location: ../login.php?logon=0');
                 }
             } 
-    
+        
+        /*
+         *  En el caso de que la petición sea de subida de fichero
+         */
         } else if ($_GET['type'] == 'file') {
             $file = $_FILES['file'];
             $name = $file['name'];
@@ -44,6 +59,10 @@
             move_uploaded_file($file['tmp_name'], '../media/'.$name);
     
             header("location: ../login.php?user=".$user);
+        
+        /*
+         *  En el caso de que la petición sea de registro 
+         */
         } else if ($_GET['type'] == 'register') {
             $nom = $_POST['nom'];
             $apel = $_POST['apel'];
@@ -69,6 +88,10 @@
                     header("location: ../login.php?registror=1");
                 };
             }
+        
+        /*
+         *  En el caso de que la petición sea para subir un articulo (Nuevo Post) 
+         */
         } else if ($_GET['type'] == 'post') {
             $imgP = $_FILES['imgP'];
             $imgS = $_FILES['imgS'];
@@ -121,8 +144,25 @@
                     }
                 }
             }
+
+        /*
+         *  En el caso de que la petición sea para sustotuir la imagen de un articulo (Cambiar imagen) 
+         */
+        } else if ($_GET['type'] == 'Cfile') {
+            $file = $_FILES['file'];
+            $user = $_GET['user'];
+            $old = $_GET['old'];
+            $oldPath = dirname($old);
+            $oldName = basename($old);
+
+            move_uploaded_file($file['tmp_name'], '.'.$oldPath.'/'.$oldName);
+    
+            header("location: ../miPanel.php?user=".$user);
         }
     }
 
+    /*
+     *  Cerramos la conexion a la base de datos
+     */
     mysqli_close($conex);
 ?>

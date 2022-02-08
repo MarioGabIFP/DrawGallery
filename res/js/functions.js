@@ -4,6 +4,14 @@ let mediaNav = document.getElementById("menu_media");
 let miPostNav = document.getElementById("menu_post");
 let misPostsNav = document.getElementById("menu_misPost");
 let nPostNav = document.getElementById("menu_nPost");
+let toastLiveExample = document.getElementById('liveToast');
+
+if (window != null) {
+    window.onload = function () {
+        var toast = new bootstrap.Toast(toastLiveExample);
+        toast.show();
+    }
+}
 
 if (loginNav != null){
     loginNav.onclick = function() {
@@ -36,13 +44,21 @@ if (miPostNav != null){
 }
 
 if (mediaNav != null){
-    mediaNav.onclick = function() {    
+    mediaNav.onclick = function(){
         document.getElementById("media").classList = "";
         miPostNav.classList = "nav-link link-dark";
     
         document.getElementById("post").classList = "visually-hidden";
         mediaNav    .classList = "nav-link active";
-    }
+    };
+}
+
+function activeMedia() {
+        document.getElementById("media").classList = "";
+        miPostNav.classList = "nav-link link-dark";
+    
+        document.getElementById("post").classList = "visually-hidden";
+        mediaNav    .classList = "nav-link active";
 }
 
 if (nPostNav != null){

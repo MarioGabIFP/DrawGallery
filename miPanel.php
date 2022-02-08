@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <!-- Fin BootStrap -->
+    <link rel="stylesheet" href="./res/font/fontawesome/css/all.css"><!-- Fonts Awensome -->
     <title>Draw Gallery</title>
 </head>
     <body>
@@ -21,11 +22,11 @@
             $conexData = json_decode(file_get_contents('./res/json/conf.json'));
 
             //recojemos los datos del objeto generado y los introducimos en sus correspondientes variables
-            $db = $conexData->data_base_conex->db;//nombre de la base de datos
-            $dbuser = $conexData->data_base_conex->user;//usuario
-            $dbpassw = $conexData->data_base_conex->passw;//contraseña
-            $dbdir = $conexData->data_base_conex->dir;//direccion (DNS o IP)
-            $dbport = $conexData->data_base_conex->port;//puerto de conexion
+            $db = $conexData->data_base_conex->db;          //nombre de la base de datos
+            $dbuser = $conexData->data_base_conex->user;    //usuario
+            $dbpassw = $conexData->data_base_conex->passw;  //contraseña
+            $dbdir = $conexData->data_base_conex->dir;      //direccion (DNS o IP)
+            $dbport = $conexData->data_base_conex->port;    //puerto de conexion
 
             /*
              *  Carga del perfil del usuario
@@ -33,8 +34,7 @@
             if (isset($_GET['user'])) {//Si hemos recibido correctamente la variable user
                 //recojemos los datos necesarios para cargar el perfil
                 $user = $_GET['user'];//usuario
-                $dir = './media/'.$user;//directorio de medios
-                $rdir = opendir($dir);//Variable lectora
+                $dir = './media/'.$user;//directorio raiz de medios del usuario
                 $colCount = 0;//contador de columnas
                 $rowCount = 0;//contador de columnas
                 $posts = [];//Array que contiene los Post del usuario
@@ -57,14 +57,40 @@
                 /*
                  *  Carga del directorio de medios del usuario sobre el array '$fileArr'
                  */
-                while($file=readdir($rdir)){
-                    if($file != "." && $file != ".."){
-                        $fileArr[] = $file;
+                /*******************************************************************************/
+                /* VULNERABILIDAD, CORRECCION: CAPAR LAS BUSQUEDAS FUERA DEL RAIZ DE LA PÁGINA */
+                /*******************************************************************************/
+                if(isset($_GET['folder'])){//si hemos recibido una carpeta directamente con &_GET (osease, a pelo, como quien dice)
+                    if (file_exists($_GET['folder'])){//si la careta solicitada existe
+                        $rdir = opendir($_GET['folder']);//Variable lectora
+    
+                        while($file=readdir($rdir)){
+                            if($file != "." && $file != ".."){
+                                $fileArr[] = $file;
+                            }
+                        }
+        
+                        if (isset($fileArr)) {
+                            sort($fileArr, SORT_NATURAL | SORT_FLAG_CASE);
+                        }
                     }
-                }
-
-                if (isset($fileArr)) {
-                    sort($fileArr, SORT_NATURAL | SORT_FLAG_CASE);
+                /*******************************************************************************/
+                /* VULNERABILIDAD, CORRECCION: CAPAR LAS BUSQUEDAS FUERA DEL RAIZ DE LA PÁGINA */
+                /*******************************************************************************/
+                } else {//si no
+                    if (file_exists($dir)){//comprobamos que haya archivos en le raiz del usuario
+                        $rdir = opendir($dir);//Variable lectora
+    
+                        while($file=readdir($rdir)){
+                            if($file != "." && $file != ".."){
+                                $fileArr[] = $file;
+                            }
+                        }
+        
+                        if (isset($fileArr)) {//solo rellenamos si hay archivos en el raiz del usuario
+                            sort($fileArr, SORT_NATURAL | SORT_FLAG_CASE);
+                        }
+                    }
                 }
 
                 /*
@@ -83,6 +109,7 @@
                     }
                 }
 
+                /* cargamos la vista */
                 echo '
                     <!-- Cabecera bootstrap -->
                     <div class="container">
@@ -134,7 +161,79 @@
                                     <div class="container">
                 ';
 
-                if (isset($fileArr)) {
+                /*******************************************************************************/
+                /* VULNERABILIDAD, CORRECCION: CAPAR LAS BUSQUEDAS FUERA DEL RAIZ DE LA PÁGINA */
+                /*******************************************************************************/
+                /* comprobamos si hemos recibido una carpeta directamente con &_GET (osease, a pelo, como quien dice)  */
+                if(isset($_GET['folder'])) {
+                    /* Peraparamos la vista de los ficheros que se ubican en el directorio */
+                    echo '<a class="row" href="./miPanel.php?user='.$user.'">Atrás</a><br>';
+                    if (isset($fileArr)) {
+                        $i = 0;
+                        $numOfFiles = sizeof($fileArr);
+                        for ($i;$i < $numOfFiles;$i++){
+                            echo '<div class="row">';
+                            $colCount = 0;
+                            $colNum = $i + $colCount;
+                            
+                            do {
+                                $fileName = pathinfo($fileArr[$colNum], PATHINFO_FILENAME);
+                                $fileExt = pathinfo($fileArr[$colNum], PATHINFO_EXTENSION);
+                                $filePath = $_GET['folder'].'/'.$fileName.'.'.$fileExt;
+                                echo '  <div class="col">
+                                            <div class="card border-0">
+                                                <img src="'.$filePath.'" title="'.$fileName.'" alt="'.$fileName.'" class="card-img w-50">
+                                                <div class="card-body">
+                                                    '.$fileName.'
+                                                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#changeFileModal'.$fileName.'">Cambiar Imagen</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal para cambiar la imagen -->
+                                        <div class="modal fade" id="changeFileModal'.$fileName.'" tabindex="-1" aria-labelledby="changeFileModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="changeFileModalLabel">Modal title</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                            <form action="./src/post.php?type=Cfile&user='.$user.'&old='.$filePath.'" enctype="multipart/form-data" method="POST">
+                                                                <div class="row">
+                                                                    <div class="col-auto mb-3">
+                                                                        <input name="file" class="form-control" type="file" id="formFile" accept="image/jpg,image/png,image/gif">
+                                                                    </div>
+                                                                    <div class="col-auto">
+                                                                        <button type="submit" class="btn btn-primary mb-3">Subir Imagen</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>';
+                                $colCount++;
+                                $colNum = $i + $colCount;
+                            } while ($colCount < 3 && $colNum < $numOfFiles);
+
+                            $i = $i + ($colCount - 1);
+
+                            echo '</div>';
+                        }  
+                    } else {
+                        echo 'Aún no hay ningún fichero a mostrar';
+                    }
+                /*******************************************************************************/
+                /* VULNERABILIDAD, CORRECCION: CAPAR LAS BUSQUEDAS FUERA DEL RAIZ DE LA PÁGINA */
+                /*******************************************************************************/
+                /* 
+                 * Si no hemos recibido una carpeta directamente con &_GET (osease, a pelo, como quien dice),
+                 * comprobamos si hemos podido recuperar los ficheros del usuario, por si hay datos en el raiz del usuario.
+                 */
+                } else if (isset($fileArr)) {
                     $i = 0;
                     $numOfFiles = sizeof($fileArr);
                     for ($i;$i < $numOfFiles;$i++){
@@ -143,10 +242,25 @@
                         $colNum = $i + $colCount;
                         
                         do {
+                            $idpost = $fileArr[$colNum];
+                            $sql = 'SELECT title FROM historias WHERE idpost = '.$idpost;
+
+                            if($res = mysqli_query($conex, $sql)){
+                                if ($reg = mysqli_fetch_row($res)){
+                                    $titlePost = $reg[0];
+                                }
+                            }
+
                             $fileName = pathinfo($fileArr[$colNum], PATHINFO_FILENAME);
-                            echo '<div class="col">
-                                        <img src="'.$dir.'/'.$fileArr[$colNum].'" title="'.$fileName.'" alt="'.$fileName.'" class="card-img">
-                                  </div>';
+                            $filePath = $dir.'/'.$fileName;
+                            echo '<a href="./miPanel.php?user='.$user.'&folder='.$filePath.'" class="col">
+                                        <div class="card border-0">
+                                            <img src="./res/img/png/folder.png" title="carpeta" alt="carpeta" class="card-img w-50">
+                                            <div class="card-body">
+                                                '.$titlePost.'
+                                            </div>
+                                        </div>
+                                  </a>';
                             $colCount++;
                             $colNum = $i + $colCount;
                         } while ($colCount < 3 && $colNum < $numOfFiles);
@@ -155,10 +269,10 @@
                         echo '</div>';
                     }
                         
-                } else {
+                } else {//si no hay nada
                     echo 'Aún no hay ningún fichero a mostrar';
                 }
-
+                
                 echo '              </div>
                                 </div>
                             </section>
@@ -184,7 +298,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>';
-                if (isset($posts)) {
+                /* si el usuario tiene posts publicados, cargamos la vista de la tabla con la lista de posts */
+                if (!(bool)empty($posts)) {
                     $i = 0;
                     $numOfPosts = sizeof($posts);
                     for ($i;$i < $numOfPosts;$i++){
@@ -202,7 +317,12 @@
                     }
                         
                 } else {
-                    echo 'Aún no has publicado ningún Post, ¿a que esperas?';
+                    /* si no hay nada, mostramos un mensaje de error */
+                    echo '  <div id="liveToast" class="toast position-fixed">
+                                <div class="toast-body">
+                                    Aún no has publicado ningún Post, ¿a que esperas?
+                                </div>
+                            </div>';
                 }
                 echo '
                                             </tbody>
@@ -268,6 +388,9 @@
                     </div>
                 ';
             }
+
+            /* Cerramos la conexion con la base de datos */
+            mysqli_close($conex);
         ?>
 
         <!-- Footer bootstrap -->
@@ -288,4 +411,15 @@
         </div>
     </body>
     <script src="./res/js/functions.js" rel="stylesheet"></script>
+    <?php
+        if (isset($_GET['folder'])){
+            echo '<script>
+                            document.getElementById("media").classList = "";
+                            miPostNav.classList = "nav-link link-dark";
+                        
+                            document.getElementById("post").classList = "visually-hidden";
+                            mediaNav.classList = "nav-link active";  
+                  </script>';
+        }
+    ?>
 </html>

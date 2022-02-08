@@ -28,10 +28,155 @@
             </ul>
         </header>
     </div>
-    <!-- Menú Flexbox -->
-    <nav></nav>
     <article>
-        <section></section>
+        <section>
+            <?php
+                /*
+                *  Obtencion de los datos de conexion  a la base de datos a partir del fichero de configuración (res/json/conf.json)
+                */
+                //Leemos los datos y los recojemos en un Objeto.
+                $conexData = json_decode(file_get_contents('./res/json/conf.json'));
+
+                //recojemos los datos del objeto generado y los introducimos en sus correspondientes variables
+                $db = $conexData->data_base_conex->db;//nombre de la base de datos
+                $dbuser = $conexData->data_base_conex->user;//usuario
+                $dbpassw = $conexData->data_base_conex->passw;//contraseña
+                $dbdir = $conexData->data_base_conex->dir;//direccion (DNS o IP)
+                $dbport = $conexData->data_base_conex->port;//puerto de conexion
+
+                /*
+                 *  Conexión a la base de datos.
+                 */
+                $conex = mysqli_connect($dbdir.':'.$dbport,$dbuser,$dbpassw,$db) 
+                                        or die ("Unnable to conect to Data Base: ".$db."
+                                                \nURL: ".$dbdir.":".$dbport."
+                                                \nUser: ".$dbuser."
+                                                \nPassword: ".$dbpassw);
+
+                $conex -> set_charset('utf8');
+
+                if(mysqli_connect_errno()){
+                    echo "Unnable to conect; Error: ".mysqli_connect_error();
+                };
+
+                /*
+                 *  Recuperamos los Articulos con referencia a lugares de España.
+                 */
+                $sql = 'SELECT title, resum, description, mainImg, otherImg FROM historias WHERE country = "España"';
+                
+                echo '  <div class="container">
+                                <div class="row">
+                                    <h1>España</h1>';
+
+                if($res = mysqli_query($conex, $sql)){
+                    while ($reg = mysqli_fetch_row($res)){
+                        echo '  <div class="col">
+                                    <div class="container border">
+                                        <div class="row">
+                                            <h3>'.$reg[0].'</h3>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <strong>'.$reg[1].'</strong>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <img src="'.$reg[3].'">
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <p>'.$reg[2].'<p>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <img src="'.$reg[4].'">
+                                        </div>
+                                    </div>
+                                </div>';
+                    }
+                }
+
+                echo '</div></div>';
+
+                /*
+                 *  Recuperamos los Articulos con referencia a lugares de Europa en general.
+                 */
+                $sql = 'SELECT title, resum, description, mainImg, otherImg FROM historias WHERE country = "Europa"';
+                
+                echo '  <div class="container">
+                                <div class="row">
+                                    <h1>Europa</h1>';
+
+                if($res = mysqli_query($conex, $sql)){
+                    while ($reg = mysqli_fetch_row($res)){
+                        echo '  <div class="col">
+                                    <div class="container border">
+                                        <div class="row">
+                                            <h3>'.$reg[0].'</h3>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <strong>'.$reg[1].'</strong>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <img src="'.$reg[3].'">
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <p>'.$reg[2].'<p>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <img src="'.$reg[4].'">
+                                        </div>
+                                    </div>
+                                </div>';
+                    }
+                }
+
+                /*
+                 *  Recuperamos los Articulos con referencia a lugares del mundo.
+                 */
+                echo '</div></div>';
+
+                $sql = 'SELECT title, resum, description, mainImg, otherImg FROM historias WHERE country = "Resto del Mundo"';
+                
+                echo '  <div class="container">
+                                <div class="row">
+                                    <h1>Resto del mundo</h1>';
+
+                if($res = mysqli_query($conex, $sql)){
+                    while ($reg = mysqli_fetch_row($res)){
+                        echo '  <div class="col">
+                                    <div class="container border">
+                                        <div class="row">
+                                            <h3>'.$reg[0].'</h3>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <strong>'.$reg[1].'</strong>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <img src="'.$reg[3].'">
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <p>'.$reg[2].'<p>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <img src="'.$reg[4].'">
+                                        </div>
+                                    </div>
+                                </div>';
+                    }
+                }
+
+                echo '</div></div>';
+            ?>
+        </section>
     </article>
     <aside></aside>
     <!-- Footer bootstrap -->

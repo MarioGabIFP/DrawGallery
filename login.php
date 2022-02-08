@@ -15,8 +15,17 @@
 </head>
     <body>
         <?php
-            if (isset($_GET['logon'])){
-                if ($_GET['logon'] == 0) {
+            /*
+             *  comprobamos si hemos recibido la variable de validacion de usuario
+             */
+            if (isset($_GET['logon'])){//si la tenemos
+                /*
+                 *  comprobamos el estado de la validacion
+                 */
+                if ($_GET['logon'] == 0) {//si es 0 el usuario se ha equivocado al meter los datos
+                    /*
+                     *  Cambiamos la vista para mostrar los errores correspondientes
+                     */
                     echo '
                         <!-- Cabecera bootstrap -->
                         <div class="container">
@@ -125,7 +134,18 @@
                         </article>
                     ';
                 }
-            } else if (isset($_GET['registror'])) {
+            /*
+             *  si no hemos recibido la variable de validacion de usuario, comprobamos si no hemos recibido la variable de validacion de registro
+             */
+            } else if (isset($_GET['registror'])) {//si la tenemos
+                /*
+                 *  Mostramos la vista con los errores correspondientes, si es que existen, estos pueden ser:
+                 *  0 -> las contraseñas no coinciden
+                 *  1 -> fallo de servidor
+                 *  -1 -> todo ok, usuario registrado
+                 *  
+                 *  Jugamos con las clases 'border', 'border-danger' y 'border-success' de bootstrap
+                 */
                 echo '
                     <!-- Cabecera bootstrap -->
                     <div class="container">
@@ -196,7 +216,7 @@
                                                 </div>
                                                 <br>
                                                 ';
-                if ($_GET['registror'] == 0) {
+                if ($_GET['registror'] == 0) {//si las contraseñas no coinciden
                     echo '
                                                 <div class="row">
                                                     <div class="col">
@@ -210,7 +230,7 @@
                                                     </div>
                                                 </div>
                                                 <br>';
-                } else {
+                } else {//si no
                     echo '
                                                 <div class="row">
                                                     <div class="col">
@@ -232,7 +252,7 @@
                                                     </div>
                                                 </div>
                                                 <br>';
-                if ($_GET['registror'] == 0) {
+                if ($_GET['registror'] == 0) {//si las contraseñas no coinciden
                     echo '
                                                 <div class="row">
                                                     <div class="col">
@@ -246,7 +266,7 @@
                                                         </div>
                                                     </div>
                                                 </div>';
-                } else if ($_GET['registror'] == -1) {
+                } else if ($_GET['registror'] == -1) {//si está todo ok
                     echo '
                                                 <div class="row">
                                                     <div class="col">
@@ -260,7 +280,7 @@
                                                         </div>
                                                     </div>
                                                 </div>';
-                } else if ($_GET['registror'] == 1) {
+                } else if ($_GET['registror'] == 1) {//si hay un fallo con el servidor
                     echo '
                                                 <div class="row">
                                                     <div class="col">
@@ -284,7 +304,10 @@
                         </section>
                     </article>
                     ';
-            }else {
+            /*
+             *  si no hemos recibido ninguna variable $_GET, mostramos la vista normal
+             */
+            } else {
                 echo '
                         <!-- Cabecera bootstrap -->
                         <div class="container">
