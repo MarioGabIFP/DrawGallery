@@ -45,14 +45,12 @@
                                                 <form class="container g-3" method="POST" action="./src/post.php?type=login">
                                                     <div class="row">
                                                         <div class="col">
-                                                            <label for="user" class="visually-hidden">Usuario</label>
                                                             <input type="text" class="form-control border border-danger" id="user" name="user" placeholder="Usuario">
                                                         </div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
                                                         <div class="col">
-                                                            <label for="pass" class="visually-hidden">Contraseña</label>
                                                             <input type="password" class="form-control border border-danger" id="pass" name="pass" placeholder="Password">
                                                         </div>
                                                     </div>
@@ -145,25 +143,23 @@
                                 <div class="container w-42">
                                     <ul class="nav nav-tabs">
                                         <li class="nav-item">
-                                            <a id="menu_login" class="nav-link active" aria-current="page" href="#">Iniciar Sesión</a>
+                                            <a id="menu_login" class="nav-link" aria-current="page" href="#">Iniciar Sesión</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a id="menu_register" class="nav-link" href="#">Registrarse</a>
+                                            <a id="menu_register" class="nav-link active" href="#">Registrarse</a>
                                         </li>
                                     </ul>
-                                    <div id="login" class="border-bottom border-start border-end">
+                                    <div id="login" class="border-bottom border-start border-end visually-hidden">
                                         <div class="modal-body">
                                             <form class="container g-3" method="POST" action="./src/post.php?type=login">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <label for="user" class="visually-hidden">Usuario</label>
                                                         <input type="text" class="form-control" id="user" name="user" placeholder="Usuario">
                                                     </div>
                                                 </div>
                                                 <br>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <label for="pass" class="visually-hidden">Contraseña</label>
                                                         <input type="password" class="form-control" id="pass" name="pass" placeholder="Password">
                                                     </div>
                                                 </div>
@@ -178,7 +174,7 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <div id="register" class="border-bottom border-start border-end visually-hidden">
+                                    <div id="register" class="border-bottom border-start border-end">
                                         <div class="modal-body">
                                             <form class="container g-3" method="POST" action="./src/post.php?type=register">
                                                 <div class="row">
