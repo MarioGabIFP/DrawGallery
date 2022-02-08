@@ -107,6 +107,7 @@
                                          WHERE idpost = "'.$idPost.'"';
 
                 if(mysqli_query($conex, $sql)){
+                    mkdir('../media/'.$user);
                     mkdir('../'.$dirimg);
                     move_uploaded_file($imgP['tmp_name'], '../'.$rutaimgP);
                     move_uploaded_file($imgS['tmp_name'], '../'.$rutaimgS);
