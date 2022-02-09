@@ -4,6 +4,6 @@
         "user" : "root",
         "passw" : "",
         "dir" : "localhost",
-        "port" : "3316"
+        "port" : "3306"
     }
 }
